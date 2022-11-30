@@ -1,0 +1,1 @@
+export const apiBaseUrl:String = "http://localhost:8080/api/";
