@@ -74,7 +74,6 @@ const Absence = () => {
   let searchValue: string;
   let startDate: string;
   let endDate: string;
-  let currentID: number;
   let status: boolean;
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
@@ -82,6 +81,7 @@ const Absence = () => {
   const [searchQuery, setSearchQuery] = useState<SearchDTO>();
   const [totalRows, setTotalRows] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [currentID, setCurrentID] = useState(0);
   const [show, setShow] = useState(false);
 
   const classes = useStyles();
@@ -163,9 +163,9 @@ const Absence = () => {
       sortable: false,
       disableColumnMenu: true,
       renderCell: (params) => {
-        currentID = params.row.id;
         const doAction = (e: any,status:boolean):void => {
-          e.stopPropagation(); // don't select this row after clicking
+          setCurrentID(params.row.id);
+          e.stopPropagation();
           status = status;
           setShow(true);
         };
@@ -197,8 +197,8 @@ const Absence = () => {
     };
       ApiService.updateAbsence(currentID, request).then((response) => {
         response.json().then((result) => {
-          if (result.status) {
-            console.log(result);
+          if (result.success) {
+            getData(page,pageSize,searchQuery);
           }
         }).catch(reason=>{
           console.log(reason);
